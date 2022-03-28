@@ -1,0 +1,59 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Document</title>
+     <script>
+         function opNaarDeBackend(){
+             var xhr = new XMLHttpRequest();
+             xhr.onreadystatechange = function(){
+                 console.log(this.status);
+                 console.log(this.readyState);
+                 if (this.readyState == 4 && this.status == 200) {
+                    alert("terug van de backend");
+                    console.log(this.responseText);
+                    var uitkomstObj = JSON.parse(this.responseText);
+                    console.log(uitkomstObj);
+                    document.getElementById("deuitkomst").innerHTML = "";
+                    for (let i=0; i < uitkomstObj.length; i++) {
+                        var ci = uitkomstObj[i];
+                        document.getElementById("deuitkomst").innerHTML += ci.bordspel + " - " + ci.rating + " sterren<br/>";
+                    }
+                 }
+             }
+             xhr.open("GET","http://localhost:8082/alleGebruikers" ,true);
+             xhr.send();
+         }
+        function postTest(){
+            var url = "http://localhost:8082/update/30";
+
+            var obj = {
+                gebruikersNaam: "Dobs",
+	            wachtwoord: "Password1233",
+	            displayNaam: "David Nieuwenhuizen",
+	            beschrijving: "Cool Doude"
+            }
+            var json = JSON.stringify(obj);
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("PUT", url, true);
+            xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+            xhr.onload = function () {
+                if (xhr.readyState == 4 && xhr.status == "200") {
+                    console.log("Great Success");
+                } else {
+                    console.error(xhr.status);
+                }
+            }
+            xhr.send(json);
+		}
+     </script>
+ </head>
+ <body>
+     <input>
+     <button onclick="postTest()">Klik Hier</button>
+     <div id="deuitkomst">Hier komt het resultaat</div>
+ </body>
+ </html>
